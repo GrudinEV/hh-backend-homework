@@ -1,4 +1,4 @@
-package ru.hh.school.dto;
+package ru.hh.school.dto.employer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

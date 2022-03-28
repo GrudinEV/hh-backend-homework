@@ -2,7 +2,7 @@ package ru.hh.school.converter;
 
 import lombok.RequiredArgsConstructor;
 import ru.hh.nab.common.properties.FileSettings;
-import ru.hh.school.dto.FavoriteEmployerDto;
+import ru.hh.school.dto.employer.FavoriteEmployerDto;
 import ru.hh.school.entity.Employer;
 import ru.hh.school.enums.Popularity;
 

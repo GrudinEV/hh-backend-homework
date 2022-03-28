@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import ru.hh.school.dto.EmployerDto;
+import ru.hh.school.dto.employer.EmployerDto;
 import ru.hh.school.entity.Area;
 import ru.hh.school.entity.Employer;
 
@@ -47,14 +47,31 @@ public class FavoriteEmployerDao {
         }
     }
 
-    public List<Employer> getFavoriteEmployers() {
+    public List<Employer> getFavoriteEmployers(int page, int perPage) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from Employer", Employer.class)
+                .setFirstResult(page * perPage)
+                .setMaxResults(perPage)
                 .getResultList();
     }
 
     public void save(Employer employer) {
         sessionFactory.getCurrentSession()
                 .save(employer);
+    }
+
+    public Employer getFavoriteEmployer(long employerId) {
+        Query<Employer> employerQuery = sessionFactory.getCurrentSession()
+                .createQuery("from Employer employer where employer.id = :id", Employer.class)
+                .setParameter("id", employerId);
+        if (!employerQuery.list().isEmpty()) {
+            return employerQuery.getSingleResult();
+        }
+        return null;
+    }
+
+    public void delete(Employer employer) {
+        sessionFactory.getCurrentSession()
+                .delete(employer);
     }
 }

@@ -1,7 +1,9 @@
 package ru.hh.school.client;
 
-import ru.hh.school.dto.EmployerDto;
-import ru.hh.school.dto.EmployersResponseDto;
+import ru.hh.school.dto.employer.EmployerDto;
+import ru.hh.school.dto.employer.EmployersResponseDto;
+import ru.hh.school.dto.vacancy.ShortVacancyDto;
+import ru.hh.school.dto.vacancy.VacanciesResponseDto;
 
 import javax.inject.Singleton;
 import javax.ws.rs.client.Client;
@@ -11,6 +13,7 @@ import javax.ws.rs.client.ClientBuilder;
 public class HttpClient {
     private static final String URI = "https://api.hh.ru";
     private static final String EMPLOYERS_PATH = "employers";
+    private static final String VACANCIES_PATH = "vacancies";
     private static final String HEADER_AGENT_PARAM = "HH-User-Agent";
     private static final String HEADER_AGENT = "HH-School-homework-app (grudinev@gmail.com)";
     private final Client client = ClientBuilder.newClient();
@@ -37,5 +40,29 @@ public class HttpClient {
                 .request()
                 .header(HEADER_AGENT_PARAM, HEADER_AGENT)
                 .get(EmployerDto.class);
+    }
+
+    public VacanciesResponseDto getVacancies(int page, int perPage, String text) {
+        return client
+                .target(URI)
+                .path(VACANCIES_PATH)
+                .queryParam("page", String.valueOf(page))
+                .queryParam("per_page", String.valueOf(perPage))
+                .queryParam("text", text)
+                .request()
+                .header(HEADER_AGENT_PARAM, HEADER_AGENT)
+                .get(VacanciesResponseDto.class);
+    }
+
+    public ShortVacancyDto getVacancy(long vacancyId) {
+        StringBuilder sb = new StringBuilder(VACANCIES_PATH);
+        sb.append("/");
+        sb.append(vacancyId);
+        return client
+                .target(URI)
+                .path(sb.toString())
+                .request()
+                .header(HEADER_AGENT_PARAM, HEADER_AGENT)
+                .get(ShortVacancyDto.class);
     }
 }

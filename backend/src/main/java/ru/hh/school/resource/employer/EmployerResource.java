@@ -1,11 +1,12 @@
-package ru.hh.school.resource;
+package ru.hh.school.resource.employer;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.hh.school.client.HttpClient;
-import ru.hh.school.dto.EmployerDto;
-import ru.hh.school.dto.EmployersResponseDto;
-import ru.hh.school.dto.ShortEmployerDto;
+import ru.hh.school.dto.employer.EmployerDto;
+import ru.hh.school.dto.employer.EmployersResponseDto;
+import ru.hh.school.dto.employer.ShortEmployerDto;
 
 import javax.inject.Singleton;
 import javax.validation.Valid;
@@ -17,14 +18,10 @@ import java.util.List;
 
 @Singleton
 @Path("/employer")
+@RequiredArgsConstructor
 public class EmployerResource {
     private final Logger logger = LoggerFactory.getLogger(EmployerResource.class);
     private final HttpClient client;
-
-    public EmployerResource(HttpClient client/*, EmployerService service*/) {
-        this.client = client;
-//        this.service = service;
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
