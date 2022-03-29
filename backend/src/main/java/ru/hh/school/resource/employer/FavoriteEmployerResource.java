@@ -8,6 +8,7 @@ import ru.hh.school.dto.employer.EmployerAddRequestDto;
 import ru.hh.school.dto.employer.EmployerPutRequestDto;
 import ru.hh.school.dto.employer.FavoriteEmployerDto;
 import ru.hh.school.service.FavoriteEmployerService;
+import ru.hh.school.validate.MyValidator;
 
 import javax.inject.Singleton;
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ public class FavoriteEmployerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response addEmployerInFavorites(EmployerAddRequestDto request) {
+        MyValidator.validateId(request.getEmployerId());
         logger.info(String.format("Start add employer in favorites with: id=%d", request.getEmployerId()));
         if (service.addEmployerInFavorites(request.getEmployerId(), request.getComment())) {
             logger.info(String.format("Employer with id=%d added in favorites.", request.getEmployerId()));
@@ -47,6 +49,7 @@ public class FavoriteEmployerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<FavoriteEmployerDto> getFavoriteEmployers(@QueryParam("page") @DefaultValue("0") @Min(value = 0) int page,
                                                           @QueryParam("per_page") @DefaultValue("20") @Valid @Min(1) @Max(100) int perPage) {
+        MyValidator.validatePaginationProperties(page, perPage);
         logger.info("Start getting favorite employers");
         return service.getFavoriteEmployers(page, perPage);
     }
@@ -57,6 +60,7 @@ public class FavoriteEmployerResource {
     @Path("/{employer_id}")
     public Response updateEmployer(@PathParam("employer_id") long employerId,
                                    EmployerPutRequestDto request) {
+        MyValidator.validateId(employerId);
         String comment = request.getComment();
         logger.info(String.format("Start updating favorite employers with id=%d, comment=%s",
                 employerId, comment));
@@ -78,6 +82,7 @@ public class FavoriteEmployerResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{employer_id}")
     public Response deleteEmployer(@PathParam("employer_id") long employerId) {
+        MyValidator.validateId(employerId);
         logger.info(String.format("Start deleting favorite employers with id=%d", employerId));
         if (service.deleteEmployer(employerId)) {
             logger.info(String.format("Employer with id=%d deleted.", employerId));
@@ -95,6 +100,7 @@ public class FavoriteEmployerResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{employer_id}/refresh")
     public void refreshEmployer(@PathParam("employer_id") long employerId) {
+        MyValidator.validateId(employerId);
         logger.info(String.format("Start refreshing favorite employers with id=%d", employerId));
         service.refreshEmployer(employerId);
     }

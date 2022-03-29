@@ -1,9 +1,8 @@
 package ru.hh.school.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,13 +13,15 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Vacancy {
     @Id
     private long id;
     private String name;
     @Column(name = "date_create")
     private LocalDate dateCreate;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.ALL*/)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JoinColumn(name = "area_id", referencedColumnName = "id")
     private Area area;
     @Column(name = "salary_from")
@@ -33,7 +34,8 @@ public class Vacancy {
     private boolean salaryGross;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.ALL*/)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     @JoinColumn(name = "employer_id", referencedColumnName = "id")
     private Employer employer;
     @Column(name = "views_count")
