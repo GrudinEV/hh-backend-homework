@@ -6,6 +6,7 @@ import org.hibernate.query.Query;
 import ru.hh.school.entity.Vacancy;
 
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 @RequiredArgsConstructor
@@ -28,7 +29,17 @@ public class FavoriteVacancyDao {
     }
 
     public void delete(Vacancy vacancy) {
+        vacancy.setEmployer(null);
+        vacancy.setArea(null);
         sessionFactory.getCurrentSession()
                 .delete(vacancy);
+    }
+
+    public List<Vacancy> getVacancies(int page, int perPage) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Vacancy", Vacancy.class)
+                .setFirstResult(page * perPage)
+                .setMaxResults(perPage)
+                .getResultList();
     }
 }

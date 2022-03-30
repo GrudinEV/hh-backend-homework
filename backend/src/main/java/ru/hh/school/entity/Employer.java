@@ -21,8 +21,7 @@ public class Employer {
     @Column(name = "date_create")
     private LocalDate dateCreate;
     private String description;
-    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.ALL*/)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "area_id", referencedColumnName = "id")
     private Area area;
     private String comment;

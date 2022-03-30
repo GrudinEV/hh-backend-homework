@@ -20,8 +20,7 @@ public class Vacancy {
     private String name;
     @Column(name = "date_create")
     private LocalDate dateCreate;
-    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.ALL*/)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "area_id", referencedColumnName = "id")
     private Area area;
     @Column(name = "salary_from")
@@ -34,8 +33,7 @@ public class Vacancy {
     private boolean salaryGross;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.ALL*/)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "employer_id", referencedColumnName = "id")
     private Employer employer;
     @Column(name = "views_count")

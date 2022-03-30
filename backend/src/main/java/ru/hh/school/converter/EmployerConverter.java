@@ -22,7 +22,7 @@ public class EmployerConverter {
         return FavoriteEmployerDto.builder()
                 .id(employer.getId())
                 .name(employer.getName())
-                .dateCreate(employer.getDateCreate())
+                .dateCreate(employer.getDateCreate().toString())
                 .description(employer.getDescription())
                 .area(areaConverter.toResponse(employer.getArea()))
                 .comment(employer.getComment())

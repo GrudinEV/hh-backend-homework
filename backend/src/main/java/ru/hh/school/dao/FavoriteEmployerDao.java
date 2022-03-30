@@ -37,6 +37,7 @@ public class FavoriteEmployerDao {
     }
 
     public void delete(Employer employer) {
+        employer.setArea(null);
         sessionFactory.getCurrentSession()
                 .delete(employer);
     }
