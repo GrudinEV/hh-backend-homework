@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import ru.hh.nab.common.properties.FileSettings;
 import ru.hh.school.dto.vacancy.FavoriteVacancyDto;
 import ru.hh.school.dto.vacancy.SalaryDto;
-import ru.hh.school.dto.vacancy.ShortVacancyDto;
+import ru.hh.school.dto.vacancy.VacancyFromApiDto;
+import ru.hh.school.dto.vacancy.VacancyResponseDto;
 import ru.hh.school.entity.Area;
 import ru.hh.school.entity.Employer;
 import ru.hh.school.entity.Vacancy;
@@ -14,7 +15,6 @@ import javax.inject.Singleton;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 @Singleton
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class VacancyConverter {
                 .build();
     }
 
-    public Vacancy dtoToEntity(ShortVacancyDto vacancyDto, Employer employer, Area vacancyArea, String comment) {
+    public Vacancy dtoToEntity(VacancyFromApiDto vacancyDto, Employer employer, Area vacancyArea, String comment) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
         return Vacancy.builder()
                 .id(vacancyDto.getId())
@@ -61,6 +61,17 @@ public class VacancyConverter {
                 .employer(employer)
                 .viewsCount(0)
                 .comment(comment)
+                .build();
+    }
+
+    public VacancyResponseDto fromApiToResponseDto(VacancyFromApiDto vacancyFromApiDto) {
+        return VacancyResponseDto.builder()
+                .id(vacancyFromApiDto.getId())
+                .name(vacancyFromApiDto.getName())
+                .area(vacancyFromApiDto.getArea())
+                .salary(vacancyFromApiDto.getSalary())
+                .createdAt(vacancyFromApiDto.getCreatedAt())
+                .employer(vacancyFromApiDto.getEmployer())
                 .build();
     }
 }

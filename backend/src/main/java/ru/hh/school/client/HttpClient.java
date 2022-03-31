@@ -2,7 +2,7 @@ package ru.hh.school.client;
 
 import ru.hh.school.dto.employer.EmployerDto;
 import ru.hh.school.dto.employer.EmployersResponseDto;
-import ru.hh.school.dto.vacancy.ShortVacancyDto;
+import ru.hh.school.dto.vacancy.VacancyFromApiDto;
 import ru.hh.school.dto.vacancy.VacanciesResponseDto;
 
 import javax.inject.Singleton;
@@ -54,7 +54,7 @@ public class HttpClient {
                 .get(VacanciesResponseDto.class);
     }
 
-    public ShortVacancyDto getVacancy(long vacancyId) {
+    public VacancyFromApiDto getVacancy(long vacancyId) {
         StringBuilder sb = new StringBuilder(VACANCIES_PATH);
         sb.append("/");
         sb.append(vacancyId);
@@ -63,6 +63,6 @@ public class HttpClient {
                 .path(sb.toString())
                 .request()
                 .header(HEADER_AGENT_PARAM, HEADER_AGENT)
-                .get(ShortVacancyDto.class);
+                .get(VacancyFromApiDto.class);
     }
 }

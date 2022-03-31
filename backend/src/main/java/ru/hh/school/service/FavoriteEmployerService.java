@@ -69,7 +69,17 @@ public class FavoriteEmployerService {
     }
 
     public void refreshEmployer(long employerId) {
-        deleteEmployer(employerId);
-        addEmployerInFavorites(employerId, "");
+        Employer existsEmployer = employerDao.getEmployer(employerId);
+        if (existsEmployer != null) {
+            EmployerDto employerDto = client.getEmployer(employerId);
+            Area area = areaDao.getArea(employerDto.getArea().getId());
+            if (area == null) {
+                area = new Area(employerDto.getArea().getId(), employerDto.getArea().getName());
+            }
+            Employer employer = converter.dtoToEntity(employerDto, area, "");
+            existsEmployer.setName(employer.getName());
+            existsEmployer.setDescription(employer.getDescription());
+            existsEmployer.setArea(employer.getArea());
+        }
     }
 }

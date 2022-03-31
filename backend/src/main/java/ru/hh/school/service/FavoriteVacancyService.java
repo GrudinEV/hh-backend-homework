@@ -9,7 +9,7 @@ import ru.hh.school.dao.FavoriteEmployerDao;
 import ru.hh.school.dao.FavoriteVacancyDao;
 import ru.hh.school.dto.employer.EmployerDto;
 import ru.hh.school.dto.vacancy.FavoriteVacancyDto;
-import ru.hh.school.dto.vacancy.ShortVacancyDto;
+import ru.hh.school.dto.vacancy.VacancyFromApiDto;
 import ru.hh.school.entity.Area;
 import ru.hh.school.entity.Employer;
 import ru.hh.school.entity.Vacancy;
@@ -32,7 +32,7 @@ public class FavoriteVacancyService {
     public boolean addVacancyInFavorites(long vacancyId, String comment) {
         Vacancy vacancy = vacancyDao.getVacancy(vacancyId);
         if (vacancy == null) {
-            ShortVacancyDto vacancyDto = client.getVacancy(vacancyId);
+            VacancyFromApiDto vacancyDto = client.getVacancy(vacancyId);
             Area vacancyArea = areaDao.getArea(vacancyDto.getArea().getId());
             if (vacancyArea == null) {
                 vacancyArea = new Area(vacancyDto.getArea().getId(), vacancyDto.getArea().getName());

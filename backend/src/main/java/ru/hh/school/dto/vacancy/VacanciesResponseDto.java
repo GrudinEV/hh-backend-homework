@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @Setter
 public class VacanciesResponseDto {
-    private List<ShortVacancyDto> items;
+    private List<VacancyFromApiDto> items;
 }
