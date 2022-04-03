@@ -101,7 +101,7 @@ public class FavoriteEmployerResource {
     @Path("/{employer_id}/refresh")
     public void refreshEmployer(@PathParam("employer_id") long employerId) {
         MyValidator.validateId(employerId);
-        logger.info(String.format("Start refreshing favorite employers with id=%d", employerId));
+        logger.info(String.format("Start refreshing favorite employer with id=%d", employerId));
         service.refreshEmployer(employerId);
     }
 }

@@ -32,21 +32,7 @@ public class FavoriteVacancyService {
     public boolean addVacancyInFavorites(long vacancyId, String comment) {
         Vacancy vacancy = vacancyDao.getVacancy(vacancyId);
         if (vacancy == null) {
-            VacancyFromApiDto vacancyDto = client.getVacancy(vacancyId);
-            Area vacancyArea = areaDao.getArea(vacancyDto.getArea().getId());
-            if (vacancyArea == null) {
-                vacancyArea = new Area(vacancyDto.getArea().getId(), vacancyDto.getArea().getName());
-            }
-            Employer employer = employerDao.getEmployer(vacancyDto.getEmployer().getId());
-            if (employer == null) {
-                EmployerDto employerDto = client.getEmployer(vacancyDto.getEmployer().getId());
-                Area employerArea = areaDao.getArea(employerDto.getArea().getId());
-                if (employerArea == null) {
-                    employerArea = new Area(employerDto.getArea().getId(), employerDto.getArea().getName());
-                }
-                employer = employerConverter.dtoToEntity(employerDto, employerArea, "");
-            }
-            vacancy = vacancyConverter.dtoToEntity(vacancyDto, employer, vacancyArea, comment);
+            vacancy = getVacancyFromApiClient(vacancyId, comment);
             vacancyDao.save(vacancy);
             return true;
         }
@@ -62,16 +48,6 @@ public class FavoriteVacancyService {
         return false;
     }
 
-    public boolean updateVacancy(long vacancyId, String comment) {
-        Vacancy vacancy = vacancyDao.getVacancy(vacancyId);
-        if (vacancy != null) {
-            vacancy.setComment(comment);
-            vacancyDao.save(vacancy);
-            return true;
-        }
-        return false;
-    }
-
     public List<FavoriteVacancyDto> getFavoriteVacancies(int page, int perPage) {
         List<Vacancy> vacancies = vacancyDao.getVacancies(page, perPage);
         return vacancies.stream()
@@ -79,5 +55,37 @@ public class FavoriteVacancyService {
                 .peek(vacancyDao::save)
                 .map(vacancyConverter::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public void refreshVacancy(long vacancyId) {
+        Vacancy existsVacancy = vacancyDao.getVacancy(vacancyId);
+        if (existsVacancy != null) {
+            Vacancy vacancy = getVacancyFromApiClient(vacancyId, "");
+            existsVacancy.setName(vacancy.getName());
+            existsVacancy.setArea(vacancy.getArea());
+            existsVacancy.setSalaryFrom(vacancy.getSalaryFrom());
+            existsVacancy.setSalaryTo(vacancy.getSalaryTo());
+            existsVacancy.setSalaryCurrency(vacancy.getSalaryCurrency());
+            existsVacancy.setSalaryGross(vacancy.isSalaryGross());
+            existsVacancy.setEmployer(vacancy.getEmployer());
+        }
+    }
+
+    private Vacancy getVacancyFromApiClient(long vacancyId, String comment) {
+        VacancyFromApiDto vacancyDto = client.getVacancy(vacancyId);
+        Area vacancyArea = areaDao.getArea(vacancyDto.getArea().getId());
+        if (vacancyArea == null) {
+            vacancyArea = new Area(vacancyDto.getArea().getId(), vacancyDto.getArea().getName());
+        }
+        Employer employer = employerDao.getEmployer(vacancyDto.getEmployer().getId());
+        if (employer == null) {
+            EmployerDto employerDto = client.getEmployer(vacancyDto.getEmployer().getId());
+            Area employerArea = areaDao.getArea(employerDto.getArea().getId());
+            if (employerArea == null) {
+                employerArea = new Area(employerDto.getArea().getId(), employerDto.getArea().getName());
+            }
+            employer = employerConverter.dtoToEntity(employerDto, employerArea, "");
+        }
+        return vacancyConverter.dtoToEntity(vacancyDto, employer, vacancyArea, comment);
     }
 }

@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.hh.school.dto.vacancy.FavoriteVacancyDto;
 import ru.hh.school.dto.vacancy.VacancyAddRequestDto;
-import ru.hh.school.dto.vacancy.VacancyPutRequestDto;
 import ru.hh.school.service.FavoriteVacancyService;
 import ru.hh.school.validate.MyValidator;
 
@@ -54,28 +53,14 @@ public class FavoriteVacancyResource {
         return service.getFavoriteVacancies(page, perPage);
     }
 
-    @PUT
+    @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{vacancy_id}")
-    public Response updateVacancy(@PathParam("vacancy_id") long vacancyId,
-                                   VacancyPutRequestDto request) {
+    @Path("/{vacancy_id}/refresh")
+    public void refreshVacancy(@PathParam("vacancy_id") long vacancyId) {
         MyValidator.validateId(vacancyId);
-        String comment = request.getComment();
-        logger.info(String.format("Start updating favorite vacancy with id=%d, comment=%s",
-                vacancyId, comment));
-        if (service.updateVacancy(vacancyId, comment)) {
-            logger.info(String.format("Vacancy with id=%d updated with comment=%s.",
-                    vacancyId, comment));
-            return Response.ok(String.format("Vacancy with id=%d updated with comment=%s.",
-                            vacancyId, comment))
-                    .build();
-        } else {
-            logger.info(String.format("Vacancy with id=%d not exists", vacancyId));
-            return Response.status(HttpStatus.BAD_REQUEST_400,
-                            String.format("Vacancy with id=%d not exists", vacancyId))
-                    .build();
-        }
+        logger.info(String.format("Start refreshing favorite vacancy with id=%d", vacancyId));
+        service.refreshVacancy(vacancyId);
     }
 
     @DELETE
