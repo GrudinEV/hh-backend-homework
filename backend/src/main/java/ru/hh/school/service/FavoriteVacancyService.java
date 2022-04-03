@@ -57,7 +57,7 @@ public class FavoriteVacancyService {
                 .collect(Collectors.toList());
     }
 
-    public void refreshVacancy(long vacancyId) {
+    public boolean refreshVacancy(long vacancyId) {
         Vacancy existsVacancy = vacancyDao.getVacancy(vacancyId);
         if (existsVacancy != null) {
             Vacancy vacancy = getVacancyFromApiClient(vacancyId, "");
@@ -68,7 +68,9 @@ public class FavoriteVacancyService {
             existsVacancy.setSalaryCurrency(vacancy.getSalaryCurrency());
             existsVacancy.setSalaryGross(vacancy.isSalaryGross());
             existsVacancy.setEmployer(vacancy.getEmployer());
+            return true;
         }
+        return false;
     }
 
     private Vacancy getVacancyFromApiClient(long vacancyId, String comment) {

@@ -55,12 +55,20 @@ public class FavoriteVacancyResource {
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{vacancy_id}/refresh")
-    public void refreshVacancy(@PathParam("vacancy_id") long vacancyId) {
+    public Response refreshVacancy(@PathParam("vacancy_id") long vacancyId) {
         MyValidator.validateId(vacancyId);
         logger.info(String.format("Start refreshing favorite vacancy with id=%d", vacancyId));
-        service.refreshVacancy(vacancyId);
+        if (service.refreshVacancy(vacancyId)) {
+            logger.info(String.format("Vacancy with id=%d refreshed.", vacancyId));
+            return Response.ok(String.format("Vacancy with id=%d refreshed.", vacancyId))
+                    .build();
+        } else {
+            logger.info(String.format("Vacancy with id=%d not exists", vacancyId));
+            return Response.status(HttpStatus.BAD_REQUEST_400,
+                            String.format("Vacancy with id=%d not exists", vacancyId))
+                    .build();
+        }
     }
 
     @DELETE

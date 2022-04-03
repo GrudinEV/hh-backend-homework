@@ -68,7 +68,7 @@ public class FavoriteEmployerService {
         return false;
     }
 
-    public void refreshEmployer(long employerId) {
+    public boolean refreshEmployer(long employerId) {
         Employer existsEmployer = employerDao.getEmployer(employerId);
         if (existsEmployer != null) {
             EmployerDto employerDto = client.getEmployer(employerId);
@@ -80,6 +80,8 @@ public class FavoriteEmployerService {
             existsEmployer.setName(employer.getName());
             existsEmployer.setDescription(employer.getDescription());
             existsEmployer.setArea(employer.getArea());
+            return true;
         }
+        return false;
     }
 }

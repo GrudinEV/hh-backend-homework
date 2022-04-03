@@ -71,9 +71,9 @@ public class FavoriteEmployerResource {
                             employerId, comment))
                     .build();
         } else {
-            logger.info(String.format("Employers with id=%d not exists", employerId));
+            logger.info(String.format("Employer with id=%d not exists", employerId));
             return Response.status(HttpStatus.BAD_REQUEST_400,
-                            String.format("Employers with id=%d not exists", employerId))
+                            String.format("Employer with id=%d not exists", employerId))
                     .build();
         }
     }
@@ -99,9 +99,18 @@ public class FavoriteEmployerResource {
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/{employer_id}/refresh")
-    public void refreshEmployer(@PathParam("employer_id") long employerId) {
+    public Response refreshEmployer(@PathParam("employer_id") long employerId) {
         MyValidator.validateId(employerId);
         logger.info(String.format("Start refreshing favorite employer with id=%d", employerId));
-        service.refreshEmployer(employerId);
+        if (service.refreshEmployer(employerId)) {
+            logger.info(String.format("Employer with id=%d refreshed.", employerId));
+            return Response.ok(String.format("Employer with id=%d refreshed.", employerId))
+                    .build();
+        } else {
+            logger.info(String.format("Employer with id=%d not exists", employerId));
+            return Response.status(HttpStatus.BAD_REQUEST_400,
+                            String.format("Employer with id=%d not exists", employerId))
+                    .build();
+        }
     }
 }
